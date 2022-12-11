@@ -7,8 +7,15 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, MoveDelegate {
     
+    func movePiece(startCol: Int, startRow: Int, toCol: Int, toRow: Int) {
+        gameEngine.movePiece(startCol: startCol, startRow: startRow, toCol: toCol, toRow: toRow);
+        boardView.pieces = gameEngine.pieces;
+        boardView.setNeedsDisplay();
+    }
+    
+
     var gameEngine: GameEngine = GameEngine();
     
     @IBOutlet weak var boardView: BoardView!
@@ -17,16 +24,9 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         gameEngine.initGame();
+        boardView.moveDelegate = self;
         boardView.pieces = gameEngine.pieces;
-
-        if (boardView.moves.count == 2) {
-            let from = boardView.moves[0];
-            let to = boardView.moves[1];
-            
-            gameEngine.movePiece(startCol: from.x, startRow: from.y, toCol: to.x, toRow: to.y);
-            boardView.pieces = gameEngine.pieces;
-            boardView.setNeedsDisplay();
-        }
+        boardView.setNeedsDisplay();
     }
 }
 

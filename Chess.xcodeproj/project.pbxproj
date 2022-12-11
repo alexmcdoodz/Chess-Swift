@@ -18,6 +18,7 @@
 		2E9EAD5629366BBD00EED297 /* BoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E9EAD5529366BBD00EED297 /* BoardView.swift */; };
 		2E9EAD582938010900EED297 /* Piece.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E9EAD572938010900EED297 /* Piece.swift */; };
 		2E9EAD5A2938EF5100EED297 /* GameEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E9EAD592938EF5100EED297 /* GameEngine.swift */; };
+		2E9EAD5C293D59D400EED297 /* MoveDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E9EAD5B293D59D400EED297 /* MoveDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,6 +56,7 @@
 		2E9EAD5529366BBD00EED297 /* BoardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardView.swift; sourceTree = "<group>"; };
 		2E9EAD572938010900EED297 /* Piece.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Piece.swift; sourceTree = "<group>"; };
 		2E9EAD592938EF5100EED297 /* GameEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameEngine.swift; sourceTree = "<group>"; };
+		2E9EAD5B293D59D400EED297 /* MoveDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -115,6 +117,7 @@
 				2E9EAD5529366BBD00EED297 /* BoardView.swift */,
 				2E9EAD572938010900EED297 /* Piece.swift */,
 				2E9EAD592938EF5100EED297 /* GameEngine.swift */,
+				2E9EAD5B293D59D400EED297 /* MoveDelegate.swift */,
 			);
 			path = Chess;
 			sourceTree = "<group>";
@@ -268,6 +271,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2E9EAD2A29366AFD00EED297 /* ViewController.swift in Sources */,
+				2E9EAD5C293D59D400EED297 /* MoveDelegate.swift in Sources */,
 				2E9EAD5A2938EF5100EED297 /* GameEngine.swift in Sources */,
 				2E9EAD5629366BBD00EED297 /* BoardView.swift in Sources */,
 				2E9EAD582938010900EED297 /* Piece.swift in Sources */,

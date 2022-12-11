@@ -19,12 +19,26 @@ class BoardView: UIView {
     let x: CGFloat = 0;
     let y: CGFloat = 0;
     var pieces: Array<Piece> = [];
-    var moves: [(x: Int, y: Int)] = [];
+    var boardSqaures: Array<Array<(UIBezierPath, UIColor)>> = [];
+    var moveDelegate: MoveDelegate?;
+    var startPos: (x: Int, y: Int) = (0,0);
+    var moves: Array<(Int, Int)> = [];
+    
     
     override func draw(_ rect: CGRect) {
         // Drawing code
         drawBoard();
+        drawSquares();
         drawPieces();
+    }
+    
+    func lookUpPiece(col: Int, row: Int) -> Piece? {
+        for piece in pieces {
+            if col == piece.col && row == piece.row {
+                return piece;
+            }
+        }
+        return nil;
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -35,11 +49,17 @@ class BoardView: UIView {
         let touchedCol: Int = Int(location.x / (bounds.width / 8));
         let touchedRow: Int = Int(location.y / (bounds.width / 8));
         
-        if (moves.count >= 2) {
-            moves.removeAll()
-        } else {
-            let coordinates = (touchedCol, touchedRow);
-            moves.append(coordinates);
+        startPos = (touchedCol, touchedRow);
+        
+        if (moves.count == 0 && lookUpPiece(col: touchedCol, row: touchedRow) != nil) {
+            moves.append(startPos);
+        } else if (moves.count > 0) {
+            moves.append(startPos);
+        }
+
+        if (moves.count == 2) {
+            moveDelegate?.movePiece(startCol: moves[0].0, startRow: moves[0].1, toCol: moves[1].0, toRow: moves[1].1);
+            moves.removeAll();
         }
         
         for piece in pieces {
@@ -55,17 +75,40 @@ class BoardView: UIView {
         }
     }
     
-    func drawBoard() {
+    func drawSquares() {
         for i in 0..<8 {
             for j in 0..<8 {
-                drawSquare(row: CGFloat(i), col: CGFloat(j));
+                let square = boardSqaures[i][j]
+                square.1.setFill();
+                square.0.fill();
             }
         }
     }
     
+    func drawBoard() {
+        let squareSize: CGFloat = bounds.width / 8;
+        for i in 0..<8 {
+            var arr: Array<(UIBezierPath, UIColor)> = [];
+            for j in 0..<8 {
+                let square = UIBezierPath(rect: CGRect(x: x + CGFloat(i) * squareSize, y: y + CGFloat(j) * squareSize, width: squareSize, height: squareSize))
+                let num = CGFloat(i) + CGFloat(j);
+                let color: UIColor;
+                if (num.truncatingRemainder(dividingBy: 2) == 0) {
+                    color = UIColor.lightGray;
+                } else {
+                    color = UIColor.darkGray;
+                }
+                arr.append((square, color));
+            }
+            boardSqaures.append(arr)
+        }
+    }
+    
     func drawSquare(row: CGFloat, col: CGFloat) {
+
         let squareSize: CGFloat = bounds.width / 8;
         let square = UIBezierPath(rect: CGRect(x: x + row * squareSize, y: y + col * squareSize, width: squareSize, height: squareSize));
+        
         let num = row + col;
         if (num.truncatingRemainder(dividingBy: 2) == 0) {
             UIColor.lightGray.setFill();
