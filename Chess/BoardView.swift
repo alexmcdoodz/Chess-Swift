@@ -23,6 +23,7 @@ class BoardView: UIView {
     var moveDelegate: MoveDelegate?;
     var startPos: (x: Int, y: Int) = (0,0);
     var moves: Array<(Int, Int)> = [];
+    var highlightedSquare = CAShapeLayer();
     
     
     override func draw(_ rect: CGRect) {
@@ -50,22 +51,23 @@ class BoardView: UIView {
         let touchedRow: Int = Int(location.y / (bounds.width / 8));
         
         startPos = (touchedCol, touchedRow);
+        let touchedSquare = boardSqaures[touchedCol][touchedRow].0;
         
+        highlightedSquare.path = touchedSquare.cgPath
+        highlightedSquare.fillColor = UIColor.yellow.cgColor
+        highlightedSquare.opacity = 0.25;
+        self.layer.addSublayer(highlightedSquare);
+
         if (moves.count == 0 && lookUpPiece(col: touchedCol, row: touchedRow) != nil) {
             moves.append(startPos);
         } else if (moves.count > 0) {
             moves.append(startPos);
         }
-
+ 
         if (moves.count == 2) {
             moveDelegate?.movePiece(startCol: moves[0].0, startRow: moves[0].1, toCol: moves[1].0, toRow: moves[1].1);
             moves.removeAll();
-        }
-        
-        for piece in pieces {
-            if (piece.col == touchedCol && piece.row == touchedRow) {
-                print("You touched a piece ")
-            }
+            highlightedSquare.removeFromSuperlayer();
         }
     }
 
