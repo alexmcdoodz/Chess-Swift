@@ -12,13 +12,13 @@ class Piece {
     var col: Int;
     var row: Int;
     let image: UIImage;
-    // 1 represents black piece, 0 represents white piece
-    let colour: Int;
+    // true represents white
+    let isWhite: Bool;
     
-    init(col: Int, row: Int, imageName: String, colour: Int) {
+    init(col: Int, row: Int, imageName: String, isWhite: Bool) {
         self.col = col;
         self.row = row;
-        self.colour = colour;
+        self.isWhite = isWhite;
         // Forced optional unwrapping is okay here, as if image is missing app is in bad state and should crash.
         self.image = UIImage(named: imageName)!;
     }

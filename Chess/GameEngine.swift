@@ -9,6 +9,7 @@ import Foundation
 
 class GameEngine {
     let startPosition: String = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+    var isWhitesMove: Bool = true;
     
     init() {
         
@@ -21,10 +22,36 @@ class GameEngine {
     }
     
     func movePiece(startCol: Int, startRow: Int, toCol: Int, toRow: Int) {
-        if let piece = lookUpPiece(col: startCol, row: startRow) {
-            piece.col = toCol;
-            piece.row = toRow;
+        
+        if (isLegalMove(startCol: startCol, startRow: startRow, toCol: toCol, toRow: toRow)) {
+            if let startPiece = lookUpPiece(col: startCol, row: startRow) {
+                if let targetPiece = lookUpPiece(col: toCol, row: toRow) {
+                    // check that player is not moving piece to a square occupied by a piece of the same colour
+                    // also checks if player accidentally moves piece to same square it was on
+                    if (targetPiece.isWhite == startPiece.isWhite) {
+                        return;
+                    }
+                    // capture enemy piece
+                    let index = pieces.firstIndex{$0 === targetPiece};
+                    pieces.remove(at: index!);
+                }
+                startPiece.col = toCol;
+                startPiece.row = toRow;
+            }
+            // Flip who's move it is after each move
+            isWhitesMove = !isWhitesMove;
         }
+    }
+    
+    func isLegalMove(startCol: Int, startRow: Int, toCol: Int, toRow: Int) -> Bool {
+        if let startPiece = lookUpPiece(col: startCol, row: startRow) {
+            // make sure right person is taking turn
+            if (isWhitesMove != startPiece.isWhite) {
+                return false;
+            }
+        }
+        
+        return true;
     }
     
     func lookUpPiece(col: Int, row: Int) -> Piece? {
@@ -46,40 +73,40 @@ class GameEngine {
             }
             var piece: Piece?;
             if (letter == "r") {
-                piece = Piece(col: col, row: row, imageName: "black_rook", colour: 1);
+                piece = Piece(col: col, row: row, imageName: "black_rook", isWhite: false);
                 col += 1;
             } else if (letter == "n") {
-                piece = Piece(col: col, row: row, imageName: "black_knight", colour: 1);
+                piece = Piece(col: col, row: row, imageName: "black_knight", isWhite: false);
                 col += 1;
             } else if (letter == "b") {
-                piece = Piece(col: col, row: row, imageName: "black_bishop", colour: 1);
+                piece = Piece(col: col, row: row, imageName: "black_bishop", isWhite: false);
                 col += 1;
             } else if (letter == "q") {
-                piece = Piece(col: col, row: row, imageName: "black_queen", colour: 1);
+                piece = Piece(col: col, row: row, imageName: "black_queen", isWhite: false);
                 col += 1;
             } else if (letter == "k") {
-                piece = Piece(col: col, row: row, imageName: "black_king", colour: 1);
+                piece = Piece(col: col, row: row, imageName: "black_king", isWhite: false);
                 col += 1;
             } else if (letter == "p") {
-                piece = Piece(col: col, row: row, imageName: "black_pawn", colour: 1);
+                piece = Piece(col: col, row: row, imageName: "black_pawn", isWhite: false);
                 col += 1;
             } else if (letter == "P") {
-                piece = Piece(col: col, row: row, imageName: "white_pawn", colour: 0);
+                piece = Piece(col: col, row: row, imageName: "white_pawn", isWhite: true);
                 col += 1;
             } else if (letter == "R") {
-                piece = Piece(col: col, row: row, imageName: "white_rook", colour: 0);
+                piece = Piece(col: col, row: row, imageName: "white_rook", isWhite: true);
                 col += 1;
             } else if (letter == "N") {
-                piece = Piece(col: col, row: row, imageName: "white_knight", colour: 0);
+                piece = Piece(col: col, row: row, imageName: "white_knight", isWhite: true);
                 col += 1;
             } else if (letter == "B") {
-                piece = Piece(col: col, row: row, imageName: "white_bishop", colour: 0);
+                piece = Piece(col: col, row: row, imageName: "white_bishop", isWhite: true);
                 col += 1;
             } else if (letter == "Q") {
-                piece = Piece(col: col, row: row, imageName: "white_queen", colour: 0);
+                piece = Piece(col: col, row: row, imageName: "white_queen", isWhite: true);
                 col += 1;
             } else if (letter == "K") {
-                piece = Piece(col: col, row: row, imageName: "white_king", colour: 0);
+                piece = Piece(col: col, row: row, imageName: "white_king", isWhite: true);
                 col += 1;
             } else if (letter == "/") {
                 row += 1;
