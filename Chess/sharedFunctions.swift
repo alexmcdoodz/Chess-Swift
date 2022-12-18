@@ -19,6 +19,18 @@ func findLegalKnightMoves(fromCol: Int, fromRow: Int, isWhitesMove: Bool, pieces
     return legalMoves;
 }
 
+func findLegalKingMoves(fromCol: Int, fromRow: Int, isWhitesMove: Bool, pieces: Array<Piece>) -> Array<(Int, Int)> {
+    var legalMoves: Array<(Int, Int)> = [];
+    let possibleMoves: Array<(Int, Int)> = [(fromCol + 1, fromRow), (fromCol - 1, fromRow), (fromCol + 1, fromRow + 1), (fromCol + 1, fromRow - 1), (fromCol, fromRow + 1), (fromCol, fromRow - 1), (fromCol - 1, fromRow - 1), (fromCol - 1, fromRow + 1)];
+    
+    for move in possibleMoves {
+        if (move.0 >= 0 && move.0 < 8 && move.1 >= 0 && move.1 < 8 && lookUpPiece(col: move.0, row: move.1, pieces: pieces)?.isWhite != isWhitesMove) {
+            legalMoves.append(move)
+        }
+    }
+    return legalMoves;
+}
+
 func findLegalQueenMoves(fromCol: Int, fromRow: Int, isWhitesMove: Bool, pieces: Array<Piece>) -> Array<(Int, Int)> {
     var legalMoves: Array<(Int, Int)> = [];
     var possibleMoves: Array<(Int, Int)> = findLegalBishopMoves(fromCol: fromCol, fromRow: fromRow, isWhitesMove: isWhitesMove, pieces: pieces);
@@ -166,6 +178,12 @@ func isLegalMove(startCol: Int, startRow: Int, toCol: Int, toRow: Int, isWhitesM
             let move = (toCol, toRow);
             if (!possibleMoves.contains(where: {$0 == move})) {
                 return false; 
+            }
+        } else if (startPiece.value == .king) {
+            let possibleMoves = findLegalKingMoves(fromCol: startCol, fromRow: startRow, isWhitesMove: isWhitesMove, pieces: pieces);
+            let move = (toCol, toRow);
+            if (!possibleMoves.contains(where: {$0 == move})) {
+                return false;
             }
         }
     }

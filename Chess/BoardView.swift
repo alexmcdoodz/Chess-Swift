@@ -78,6 +78,9 @@ class BoardView: UIView {
                 } else if (piece.value == .queen) {
                     let moves = findLegalQueenMoves(fromCol: touchedCol, fromRow: touchedRow, isWhitesMove: isWhitesMove, pieces: pieces);
                     highlightPossibleMoves(moves: moves);
+                } else if (piece.value == .king) {
+                    let moves = findLegalKingMoves(fromCol: touchedCol, fromRow: touchedRow, isWhitesMove: isWhitesMove, pieces: pieces);
+                    highlightPossibleMoves(moves: moves);
                 }
             }
         }
