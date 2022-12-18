@@ -29,5 +29,12 @@ class ChessTests: XCTestCase {
             // Put the code you want to measure the time of here.
         }
     }
+    
+    func testCantCaptureOwnPiece() {
+        let game = GameEngine();
+        game.initGame();
+        // assert king cant capture queen
+        XCTAssertFalse(game.isLegalMove(startCol: 4, startRow: 7, toCol: 3, toRow: 7));
+    }
 
 }

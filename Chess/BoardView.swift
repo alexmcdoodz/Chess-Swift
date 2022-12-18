@@ -24,6 +24,8 @@ class BoardView: UIView {
     var startPos: (x: Int, y: Int) = (0,0);
     var moves: Array<(Int, Int)> = [];
     var highlightedSquare = CAShapeLayer();
+    var isWhitesMove: Bool = true;
+    var highlightedPossibleMoves: Array<CAShapeLayer> = [];
     
     
     override func draw(_ rect: CGRect) {
@@ -32,42 +34,71 @@ class BoardView: UIView {
         drawSquares();
         drawPieces();
     }
-    
-    func lookUpPiece(col: Int, row: Int) -> Piece? {
-        for piece in pieces {
-            if col == piece.col && row == piece.row {
-                return piece;
-            }
-        }
-        return nil;
-    }
-    
+        
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+
+        for square in highlightedPossibleMoves {
+            square.removeFromSuperlayer();
+        }
+        
+        highlightedPossibleMoves = [];
+
         // forced unwrapping okay here as there will always be atleast one touch in touches
         let touch = touches.first!;
         let location = touch.location(in: self);
         
         let touchedCol: Int = Int(location.x / (bounds.width / 8));
         let touchedRow: Int = Int(location.y / (bounds.width / 8));
+        let lookedUpPiece = lookUpPiece(col: touchedCol, row: touchedRow, pieces: pieces);
         
         startPos = (touchedCol, touchedRow);
         let touchedSquare = boardSqaures[touchedCol][touchedRow].0;
         
+        // highlight touched square
         highlightedSquare.path = touchedSquare.cgPath
         highlightedSquare.fillColor = UIColor.yellow.cgColor
         highlightedSquare.opacity = 0.25;
         self.layer.addSublayer(highlightedSquare);
-
-        if (moves.count == 0 && lookUpPiece(col: touchedCol, row: touchedRow) != nil) {
+        
+        // highlight possible moves if piece selected
+        if let piece = lookedUpPiece {
+            if (piece.isWhite == isWhitesMove) {
+                if (piece.value == .knight) {
+                    let moves = findLegalKnightMoves(fromCol: touchedCol, fromRow: touchedRow, isWhitesMove: isWhitesMove, pieces: pieces);
+                    highlightPossibleMoves(moves: moves);
+                }
+            }
+        }
+        
+        if (moves.count == 0 && lookedUpPiece != nil) {
             moves.append(startPos);
         } else if (moves.count > 0) {
-            moves.append(startPos);
+            if (startPos != moves[0]) {
+                moves.append(startPos);
+            }
         }
- 
+        
         if (moves.count == 2) {
-            moveDelegate?.movePiece(startCol: moves[0].0, startRow: moves[0].1, toCol: moves[1].0, toRow: moves[1].1);
+            if (isLegalMove(startCol: moves[0].0, startRow: moves[0].1, toCol: moves[1].0, toRow: moves[1].1, isWhitesMove: isWhitesMove, pieces: pieces)) {
+                moveDelegate?.movePiece(startCol: moves[0].0, startRow: moves[0].1, toCol: moves[1].0, toRow: moves[1].1);
+                isWhitesMove = !isWhitesMove;
+                print("move made - boardView")
+            }
             moves.removeAll();
             highlightedSquare.removeFromSuperlayer();
+            
+        }
+    }
+    
+    func highlightPossibleMoves(moves: Array<(Int, Int)>) {
+        for move in moves {
+            let square = boardSqaures[move.0][move.1].0;
+            let highlightedSquare = CAShapeLayer();
+            highlightedSquare.path = square.cgPath;
+            highlightedSquare.fillColor = UIColor.blue.cgColor;
+            highlightedSquare.opacity = 0.25;
+            self.layer.addSublayer(highlightedSquare);
+            highlightedPossibleMoves.append(highlightedSquare);
         }
     }
 

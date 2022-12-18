@@ -15,7 +15,6 @@ class ViewController: UIViewController, MoveDelegate {
         boardView.setNeedsDisplay();
     }
     
-
     var gameEngine: GameEngine = GameEngine();
     
     @IBOutlet weak var boardView: BoardView!
