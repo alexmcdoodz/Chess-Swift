@@ -52,20 +52,26 @@ class BoardView: UIView {
         let lookedUpPiece = lookUpPiece(col: touchedCol, row: touchedRow, pieces: pieces);
         
         startPos = (touchedCol, touchedRow);
-        let touchedSquare = boardSqaures[touchedCol][touchedRow].0;
+
         
-        // highlight touched square
-        highlightedSquare.path = touchedSquare.cgPath
-        highlightedSquare.fillColor = UIColor.yellow.cgColor
-        highlightedSquare.opacity = 0.25;
-        self.layer.addSublayer(highlightedSquare);
-        
-        // highlight possible moves if piece selected
         if let piece = lookedUpPiece {
             if (piece.isWhite == isWhitesMove) {
+                
+                // highlight touched square
+                let touchedSquare = boardSqaures[touchedCol][touchedRow].0;
+                highlightedSquare.path = touchedSquare.cgPath
+                highlightedSquare.fillColor = UIColor.yellow.cgColor
+                highlightedSquare.opacity = 0.25;
+                self.layer.addSublayer(highlightedSquare);
+                
+                // highlight possible moves if piece selected
                 if (piece.value == .knight) {
                     let moves = findLegalKnightMoves(fromCol: touchedCol, fromRow: touchedRow, isWhitesMove: isWhitesMove, pieces: pieces);
                     highlightPossibleMoves(moves: moves);
+                } else if (piece.value == .bishop) {
+                    let moves = findLegalBishopMoves(fromCol: touchedCol, fromRow: touchedRow, isWhitesMove: isWhitesMove, pieces: pieces);
+                    highlightPossibleMoves(moves: moves);
+                    
                 }
             }
         }
@@ -75,6 +81,8 @@ class BoardView: UIView {
         } else if (moves.count > 0) {
             if (startPos != moves[0]) {
                 moves.append(startPos);
+            } else {
+                moves.removeAll();
             }
         }
         

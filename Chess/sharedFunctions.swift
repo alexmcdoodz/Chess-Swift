@@ -19,6 +19,57 @@ func findLegalKnightMoves(fromCol: Int, fromRow: Int, isWhitesMove: Bool, pieces
     return legalMoves;
 }
 
+func findLegalBishopMoves(fromCol: Int, fromRow: Int, isWhitesMove: Bool, pieces: Array<Piece>) -> Array<(Int, Int)> {
+    var legalMoves: Array<(Int, Int)> = [];
+    var possibleMoves: Array<(Int, Int)> = [];
+    
+    // upwards left diagonal
+    var i = fromCol, j = fromRow;
+    while (i > 0 && j > 0) {
+        i -= 1;
+        j -= 1;
+        possibleMoves.append((i , j));
+        if (lookUpPiece(col: i, row: j, pieces: pieces) != nil) {
+            break;
+        }
+    }
+    i = fromCol; j = fromRow;
+    while (i < 7 && j < 7) {
+        i += 1;
+        j += 1;
+        possibleMoves.append((i, j));
+        if (lookUpPiece(col: i, row: j, pieces: pieces) != nil) {
+            break;
+        }
+    }
+    
+    i = fromCol; j = fromRow;
+    while (i < 7 && j > 0) {
+        i += 1;
+        j -= 1;
+        possibleMoves.append((i , j));
+        if (lookUpPiece(col: i, row: j, pieces: pieces) != nil) {
+            break;
+        }
+    }
+    i = fromCol; j = fromRow;
+    while (i > 0 && j < 7) {
+        i -= 1;
+        j += 1;
+        possibleMoves.append((i , j));
+        if (lookUpPiece(col: i, row: j, pieces: pieces) != nil) {
+            break;
+        }
+    }
+    
+    for move in possibleMoves {
+        if (lookUpPiece(col: move.0, row: move.1, pieces: pieces)?.isWhite != isWhitesMove) {
+            legalMoves.append(move);
+        }
+    }
+    return legalMoves;
+}
+
 func isLegalMove(startCol: Int, startRow: Int, toCol: Int, toRow: Int, isWhitesMove: Bool, pieces: Array<Piece>) -> Bool {
     if let startPiece = lookUpPiece(col: startCol, row: startRow, pieces: pieces) {
         // make sure right person is taking turn
@@ -34,6 +85,12 @@ func isLegalMove(startCol: Int, startRow: Int, toCol: Int, toRow: Int, isWhitesM
         }
         if (startPiece.value == .knight) {
             let possibleMoves = findLegalKnightMoves(fromCol: startCol, fromRow: startRow, isWhitesMove: isWhitesMove, pieces: pieces);
+            let move = (toCol, toRow);
+            if (!possibleMoves.contains(where: {$0 == move})) {
+                return false;
+            }
+        } else if (startPiece.value == .bishop) {
+            let possibleMoves = findLegalBishopMoves(fromCol: startCol, fromRow: startRow, isWhitesMove: isWhitesMove, pieces: pieces);
             let move = (toCol, toRow);
             if (!possibleMoves.contains(where: {$0 == move})) {
                 return false;
