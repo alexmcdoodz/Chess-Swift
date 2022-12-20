@@ -7,6 +7,56 @@
 
 import Foundation
 
+func findLegalPawnMoves(fromCol: Int, fromRow: Int, isWhitesMove: Bool, pieces: Array<Piece>) -> Array<(Int, Int)> {
+    var legalMoves: Array<(Int, Int)> = [];
+    var possibleMoves: Array<(Int, Int)> = [];
+    
+    if let piece = lookUpPiece(col: fromCol, row: fromRow, pieces: pieces) {
+        if (piece.isWhite) {
+            if (lookUpPiece(col: fromCol, row: fromRow - 1, pieces: pieces) == nil) {
+                possibleMoves.append((fromCol, fromRow - 1));
+            }
+            if (piece.row == 6) {
+                possibleMoves.append((fromCol, fromRow - 2));
+            }
+            if let leftPiece = lookUpPiece(col: fromCol - 1, row: fromRow - 1, pieces: pieces) {
+                if (!leftPiece.isWhite) {
+                    possibleMoves.append((fromCol - 1, fromRow - 1));
+                }
+            }
+            if let rightPiece = lookUpPiece(col: fromCol + 1, row: fromRow - 1, pieces: pieces) {
+                if (!rightPiece.isWhite) {
+                    possibleMoves.append((fromCol + 1, fromRow - 1));
+                }
+            }
+            
+        } else {
+            if (lookUpPiece(col: fromCol, row: fromRow + 1, pieces: pieces) == nil) {
+                possibleMoves.append((fromCol, fromRow + 1));
+            }
+            if (piece.row == 1) {
+                possibleMoves.append((fromCol, fromRow + 2));
+            }
+            if let leftPiece = lookUpPiece(col: fromCol - 1, row: fromRow + 1, pieces: pieces) {
+                if (leftPiece.isWhite) {
+                    possibleMoves.append((fromCol - 1, fromRow + 1));
+                }
+            }
+            if let rightPiece = lookUpPiece(col: fromCol + 1, row: fromRow + 1, pieces: pieces) {
+                if (rightPiece.isWhite) {
+                    possibleMoves.append((fromCol + 1, fromRow + 1));
+                }
+            }
+        }
+    }
+    for move in possibleMoves {
+        if (move.0 < 8 && move.0 >= 0 && move.1 < 8 && move.1 >= 0) {
+            legalMoves.append(move);
+        }
+    }
+    return legalMoves;
+}
+
 func findLegalKnightMoves(fromCol: Int, fromRow: Int, isWhitesMove: Bool, pieces: Array<Piece>) -> Array<(Int, Int)> {
     var legalMoves: Array<(Int, Int)> = [];
     let possibleMoves: Array<(Int, Int)> = [(fromCol + 1, fromRow - 2), (fromCol - 1, fromRow + 2), (fromCol + 2, fromRow - 1), (fromCol - 2, fromRow + 1), (fromCol + 1, fromRow + 2), (fromCol - 1, fromRow - 2), (fromCol - 2, fromRow - 1), (fromCol + 2, fromRow + 1)];
@@ -40,8 +90,6 @@ func findLegalQueenMoves(fromCol: Int, fromRow: Int, isWhitesMove: Bool, pieces:
             legalMoves.append(move);
         }
     }
-    print(possibleMoves)
-    print(legalMoves);
     return legalMoves;
 }
 
@@ -181,6 +229,12 @@ func isLegalMove(startCol: Int, startRow: Int, toCol: Int, toRow: Int, isWhitesM
             }
         } else if (startPiece.value == .king) {
             let possibleMoves = findLegalKingMoves(fromCol: startCol, fromRow: startRow, isWhitesMove: isWhitesMove, pieces: pieces);
+            let move = (toCol, toRow);
+            if (!possibleMoves.contains(where: {$0 == move})) {
+                return false;
+            }
+        } else if (startPiece.value == .pawn) {
+            let possibleMoves = findLegalPawnMoves(fromCol: startCol, fromRow: startRow, isWhitesMove: isWhitesMove, pieces: pieces);
             let move = (toCol, toRow);
             if (!possibleMoves.contains(where: {$0 == move})) {
                 return false;
