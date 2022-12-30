@@ -7,6 +7,37 @@
 
 import Foundation
 
+func canCastleShort(fromCol: Int, fromRow: Int, pieces: Array<Piece>) -> Bool {
+    if let king = lookUpPiece(col: fromCol, row: fromRow, pieces: pieces) {
+        if let rook = lookUpPiece(col: 7, row: fromRow, pieces: pieces) {
+            if (!king.hasMoved && !rook.hasMoved) {
+                let fCol = lookUpPiece(col: fromCol + 1, row: fromRow, pieces: pieces);
+                let gCol = lookUpPiece(col: fromCol + 2, row: fromRow, pieces: pieces);
+                if (fCol == nil && gCol == nil) {
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
+func canCastleLong(fromCol: Int, fromRow: Int, pieces: Array<Piece>) -> Bool {
+    if let king = lookUpPiece(col: fromCol, row: fromRow, pieces: pieces) {
+        if let rook = lookUpPiece(col: 0, row: fromRow, pieces: pieces) {
+            if (!king.hasMoved && !rook.hasMoved) {
+                let bCol = lookUpPiece(col: fromCol - 3, row: fromRow, pieces: pieces);
+                let cCol = lookUpPiece(col: fromCol - 2, row: fromRow, pieces: pieces);
+                let dCol = lookUpPiece(col: fromCol - 1, row: fromRow, pieces: pieces);
+                if (bCol == nil && cCol == nil && dCol == nil) {
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
 func findLegalPawnMoves(fromCol: Int, fromRow: Int, isWhitesMove: Bool, pieces: Array<Piece>) -> Array<(Int, Int)> {
     var legalMoves: Array<(Int, Int)> = [];
     var possibleMoves: Array<(Int, Int)> = [];
@@ -72,11 +103,16 @@ func findLegalKnightMoves(fromCol: Int, fromRow: Int, isWhitesMove: Bool, pieces
 func findLegalKingMoves(fromCol: Int, fromRow: Int, isWhitesMove: Bool, pieces: Array<Piece>) -> Array<(Int, Int)> {
     var legalMoves: Array<(Int, Int)> = [];
     let possibleMoves: Array<(Int, Int)> = [(fromCol + 1, fromRow), (fromCol - 1, fromRow), (fromCol + 1, fromRow + 1), (fromCol + 1, fromRow - 1), (fromCol, fromRow + 1), (fromCol, fromRow - 1), (fromCol - 1, fromRow - 1), (fromCol - 1, fromRow + 1)];
-    
     for move in possibleMoves {
         if (move.0 >= 0 && move.0 < 8 && move.1 >= 0 && move.1 < 8 && lookUpPiece(col: move.0, row: move.1, pieces: pieces)?.isWhite != isWhitesMove) {
             legalMoves.append(move)
         }
+    }
+    if (canCastleShort(fromCol: fromCol, fromRow: fromRow, pieces: pieces)) {
+        legalMoves.append((fromCol + 2, fromRow));
+    }
+    if (canCastleLong(fromCol: fromCol, fromRow: fromRow, pieces: pieces)) {
+        legalMoves.append((fromCol - 2, fromRow));
     }
     return legalMoves;
 }

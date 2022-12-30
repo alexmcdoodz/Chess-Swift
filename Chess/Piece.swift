@@ -19,6 +19,7 @@ class Piece {
     // true represents white
     let isWhite: Bool;
     let value: Value;
+    var hasMoved: Bool = false;
     
     init(col: Int, row: Int, imageName: String, isWhite: Bool, value: Value) {
         self.col = col;

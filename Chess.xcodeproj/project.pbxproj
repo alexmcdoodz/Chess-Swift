@@ -117,8 +117,8 @@
 				2E9EAD3329366AFE00EED297 /* Info.plist */,
 				2E9EAD572938010900EED297 /* Piece.swift */,
 				2E9EAD2929366AFD00EED297 /* ViewController.swift */,
-				2E9EAD5529366BBD00EED297 /* BoardView.swift */,
 				2E9EAD592938EF5100EED297 /* GameEngine.swift */,
+				2E9EAD5529366BBD00EED297 /* BoardView.swift */,
 				2E9EAD5F294F619E00EED297 /* MoveDelegate.swift */,
 				2E9EAD61294F864800EED297 /* SharedFunctions.swift */,
 			);
@@ -459,6 +459,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = K9YUN7KKGQ;
 				INFOPLIST_FILE = Chess/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -478,6 +479,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = K9YUN7KKGQ;
 				INFOPLIST_FILE = Chess/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

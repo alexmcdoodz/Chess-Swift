@@ -52,7 +52,6 @@ class BoardView: UIView {
         let lookedUpPiece = lookUpPiece(col: touchedCol, row: touchedRow, pieces: pieces);
         
         startPos = (touchedCol, touchedRow);
-
         
         if let piece = lookedUpPiece {
             if (piece.isWhite == isWhitesMove) {
@@ -100,13 +99,28 @@ class BoardView: UIView {
         
         if (moves.count == 2) {
             if (isLegalMove(startCol: moves[0].0, startRow: moves[0].1, toCol: moves[1].0, toRow: moves[1].1, isWhitesMove: isWhitesMove, pieces: pieces)) {
-                moveDelegate?.movePiece(startCol: moves[0].0, startRow: moves[0].1, toCol: moves[1].0, toRow: moves[1].1);
+                
+                if let piece = lookUpPiece(col: moves[0].0, row: moves[0].1, pieces: pieces) {
+                    
+                    if (piece.value == .king && abs(moves[0].0 - moves[1].0) > 1) {
+                        let difference = moves[0].0 - moves[1].0;
+                        if (difference == -2) {
+                            moveDelegate?.castleShort(fromRow: moves[0].1);
+                        } else if (difference == 2) {
+                            moveDelegate?.castleLong(fromRow: moves[0].1);
+                        }
+                    } else {
+                        moveDelegate?.movePiece(startCol: moves[0].0, startRow: moves[0].1, toCol: moves[1].0, toRow: moves[1].1);
+                    }
+                    
+                    piece.hasMoved = true;
+                }
+
                 isWhitesMove = !isWhitesMove;
                 print("move made - boardView")
             }
             moves.removeAll();
             highlightedSquare.removeFromSuperlayer();
-            
         }
     }
     

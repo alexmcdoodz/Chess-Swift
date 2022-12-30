@@ -20,6 +20,26 @@ class GameEngine {
         initPiecesFromFen(Fen: startPosition)
     }
     
+    func castleShort(fromRow: Int) {
+        if let rook = lookUpPiece(col: 7, row: fromRow, pieces: pieces) {
+            if let king = lookUpPiece(col: 4, row: fromRow, pieces: pieces) {
+                king.col = 6;
+                rook.col = 5;
+            }
+        }
+        isWhitesMove = !isWhitesMove;
+    }
+    
+    func castleLong(fromRow: Int) {
+        if let rook = lookUpPiece(col: 0, row: fromRow, pieces: pieces) {
+            if let king = lookUpPiece(col: 4, row: fromRow, pieces: pieces) {
+                king.col = 2;
+                rook.col = 3;
+            }
+        }
+        isWhitesMove = !isWhitesMove;
+    }
+    
     func movePiece(startCol: Int, startRow: Int, toCol: Int, toRow: Int) {
         
         if (isLegalMove(startCol: startCol, startRow: startRow, toCol: toCol, toRow: toRow, isWhitesMove: isWhitesMove, pieces: pieces)) {

@@ -9,6 +9,19 @@ import UIKit
 
 class ViewController: UIViewController, MoveDelegate {
     
+    func castleShort(fromRow: Int) {
+        gameEngine.castleShort(fromRow: fromRow);
+        boardView.pieces = gameEngine.pieces;
+        boardView.setNeedsDisplay();
+    }
+    
+    func castleLong(fromRow: Int) {
+        gameEngine.castleLong(fromRow: fromRow);
+        boardView.pieces = gameEngine.pieces;
+        boardView.setNeedsDisplay();
+    }
+    
+    
     func movePiece(startCol: Int, startRow: Int, toCol: Int, toRow: Int) {
         gameEngine.movePiece(startCol: startCol, startRow: startRow, toCol: toCol, toRow: toRow);
         boardView.pieces = gameEngine.pieces;

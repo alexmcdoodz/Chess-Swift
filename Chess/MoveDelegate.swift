@@ -9,4 +9,6 @@ import Foundation
 
 protocol MoveDelegate {
     func movePiece(startCol: Int, startRow: Int, toCol: Int, toRow: Int);
+    func castleShort(fromRow: Int);
+    func castleLong(fromRow: Int);
 }
