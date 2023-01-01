@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2E68C21729622D40006EBB3A /* piecesMoves.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E68C21629622D3F006EBB3A /* piecesMoves.swift */; };
 		2E9EAD2629366AFD00EED297 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E9EAD2529366AFD00EED297 /* AppDelegate.swift */; };
 		2E9EAD2829366AFD00EED297 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E9EAD2729366AFD00EED297 /* SceneDelegate.swift */; };
 		2E9EAD2A29366AFD00EED297 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E9EAD2929366AFD00EED297 /* ViewController.swift */; };
@@ -40,6 +41,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2E68C21629622D3F006EBB3A /* piecesMoves.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = piecesMoves.swift; sourceTree = "<group>"; };
 		2E9EAD2229366AFD00EED297 /* Chess.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Chess.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E9EAD2529366AFD00EED297 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2E9EAD2729366AFD00EED297 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -121,6 +123,7 @@
 				2E9EAD5529366BBD00EED297 /* BoardView.swift */,
 				2E9EAD5F294F619E00EED297 /* MoveDelegate.swift */,
 				2E9EAD61294F864800EED297 /* SharedFunctions.swift */,
+				2E68C21629622D3F006EBB3A /* piecesMoves.swift */,
 			);
 			path = Chess;
 			sourceTree = "<group>";
@@ -274,6 +277,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2E9EAD62294F864800EED297 /* SharedFunctions.swift in Sources */,
+				2E68C21729622D40006EBB3A /* piecesMoves.swift in Sources */,
 				2E9EAD2A29366AFD00EED297 /* ViewController.swift in Sources */,
 				2E9EAD5A2938EF5100EED297 /* GameEngine.swift in Sources */,
 				2E9EAD60294F619E00EED297 /* MoveDelegate.swift in Sources */,
