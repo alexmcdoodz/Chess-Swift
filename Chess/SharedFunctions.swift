@@ -48,7 +48,9 @@ func findLegalPawnMoves(fromCol: Int, fromRow: Int, isWhitesMove: Bool, pieces: 
                 possibleMoves.append((fromCol, fromRow - 1));
             }
             if (piece.row == 6) {
-                possibleMoves.append((fromCol, fromRow - 2));
+                if (lookUpPiece(col: fromCol, row: fromRow - 2, pieces: pieces) == nil) {
+                    possibleMoves.append((fromCol, fromRow - 2));
+                }
             }
             if let leftPiece = lookUpPiece(col: fromCol - 1, row: fromRow - 1, pieces: pieces) {
                 if (!leftPiece.isWhite) {
@@ -66,7 +68,9 @@ func findLegalPawnMoves(fromCol: Int, fromRow: Int, isWhitesMove: Bool, pieces: 
                 possibleMoves.append((fromCol, fromRow + 1));
             }
             if (piece.row == 1) {
-                possibleMoves.append((fromCol, fromRow + 2));
+                if (lookUpPiece(col: fromCol, row: fromRow + 2, pieces: pieces) == nil) {
+                    possibleMoves.append((fromCol, fromRow + 2));
+                }
             }
             if let leftPiece = lookUpPiece(col: fromCol - 1, row: fromRow + 1, pieces: pieces) {
                 if (leftPiece.isWhite) {
@@ -117,13 +121,73 @@ func findLegalKingMoves(fromCol: Int, fromRow: Int, isWhitesMove: Bool, pieces: 
     return legalMoves;
 }
 
+func doesMoveGetOutOfCheck(fromCol: Int, fromRow: Int, isWhitesMove: Bool, move: (Int, Int), pieces: Array<Piece>) -> Bool {
+    var tempPieces = pieces;
+    if let piece = lookUpPiece(col: fromCol, row: fromRow, pieces: tempPieces) {
+        if let capturePiece = lookUpPiece(col: move.0, row: move.1, pieces: tempPieces) {
+            let index = tempPieces.firstIndex{$0 === capturePiece};
+            tempPieces.remove(at: index!);
+            piece.col = move.0;
+            piece.row = move.1;
+            if (isInCheck(isWhitesMove: isWhitesMove, pieces: tempPieces)) {
+                piece.col = fromCol;
+                piece.row = fromRow;
+                return true;
+            }
+            
+        }
+        piece.col = move.0;
+        piece.row = move.1;
+        if (isInCheck(isWhitesMove: !isWhitesMove, pieces: tempPieces)) {
+            piece.col = fromCol;
+            piece.row = fromRow;
+            return false;
+        }
+        piece.col = fromCol;
+        piece.row = fromRow;
+    }
+    return true;
+}
+
+func isInCheck(isWhitesMove: Bool, pieces: Array<Piece>) -> Bool {
+    // loop through all pieces and if they are of opposite colour to isWhitesMove, add that pieces possible moves to attacked squares
+    // if king is on any of the "attacked squares" king in check
+    var attatckedSquares: Array<(Int, Int)> = [];
+    for piece in pieces {
+        if (piece.isWhite != !isWhitesMove) {
+            if (piece.value == .bishop) {
+                attatckedSquares += findLegalBishopMoves(fromCol: piece.col, fromRow: piece.row, isWhitesMove: isWhitesMove, pieces: pieces);
+            } else if (piece.value == .knight) {
+                attatckedSquares += findLegalKnightMoves(fromCol: piece.col, fromRow: piece.row, isWhitesMove: isWhitesMove, pieces: pieces);
+            } else if (piece.value == .pawn) {
+                attatckedSquares += findLegalPawnMoves(fromCol: piece.col, fromRow: piece.row, isWhitesMove: isWhitesMove, pieces: pieces);
+            } else if (piece.value == .queen) {
+                attatckedSquares += findLegalQueenMoves(fromCol: piece.col, fromRow: piece.row, isWhitesMove: isWhitesMove, pieces: pieces);
+            } else if (piece.value == .rook) {
+                attatckedSquares += findLegalRookMoves(fromCol: piece.col, fromRow: piece.row, isWhitesMove: isWhitesMove, pieces: pieces);
+            }
+        }
+    }
+    
+    for square in attatckedSquares {
+        if let piece = lookUpPiece(col: square.0, row: square.1, pieces: pieces) {
+            if (piece.value == .king) {
+                return true;
+            }
+        }
+    }
+    
+    return false;
+}
+
 func findLegalQueenMoves(fromCol: Int, fromRow: Int, isWhitesMove: Bool, pieces: Array<Piece>) -> Array<(Int, Int)> {
     var legalMoves: Array<(Int, Int)> = [];
     var possibleMoves: Array<(Int, Int)> = findLegalBishopMoves(fromCol: fromCol, fromRow: fromRow, isWhitesMove: isWhitesMove, pieces: pieces);
     possibleMoves += findLegalRookMoves(fromCol: fromCol, fromRow: fromRow, isWhitesMove: isWhitesMove, pieces: pieces);
+    
     for move in possibleMoves {
         if (lookUpPiece(col: move.0, row: move.1, pieces: pieces)?.isWhite != isWhitesMove) {
-            legalMoves.append(move);
+                legalMoves.append(move);
         }
     }
     return legalMoves;
@@ -227,6 +291,7 @@ func findLegalBishopMoves(fromCol: Int, fromRow: Int, isWhitesMove: Bool, pieces
 }
 
 func isLegalMove(startCol: Int, startRow: Int, toCol: Int, toRow: Int, isWhitesMove: Bool, pieces: Array<Piece>) -> Bool {
+    
     if let startPiece = lookUpPiece(col: startCol, row: startRow, pieces: pieces) {
         // make sure right person is taking turn
         if (isWhitesMove != startPiece.isWhite) {
@@ -239,6 +304,15 @@ func isLegalMove(startCol: Int, startRow: Int, toCol: Int, toRow: Int, isWhitesM
                 return false;
             }
         }
+
+        if (isInCheck(isWhitesMove: !isWhitesMove, pieces: pieces)) {
+            let tempPieces = pieces;
+            if (!doesMoveGetOutOfCheck(fromCol: startCol, fromRow: startRow, isWhitesMove: isWhitesMove, move: (toCol, toRow), pieces: tempPieces)) {
+                return false;
+            }
+        }
+        
+        // Check player is moving pieces correctly
         if (startPiece.value == .knight) {
             let possibleMoves = findLegalKnightMoves(fromCol: startCol, fromRow: startRow, isWhitesMove: isWhitesMove, pieces: pieces);
             let move = (toCol, toRow);
@@ -277,7 +351,18 @@ func isLegalMove(startCol: Int, startRow: Int, toCol: Int, toRow: Int, isWhitesM
             }
         }
     }
+    
+    var tempPieces = pieces;
+    
+    
     return true;
+}
+
+func doesMovePutYouInCheck(startCol: Int, startRow: Int, toCol: Int, toRow: Int, isWhitesMove: Bool, pieces: Array<Piece>) -> Bool {
+    if let piece = lookUpPiece(col: startCol, row: startRow, pieces: pieces) {
+        if let capturedPiece = 
+    }
+    return true ;
 }
 
 func lookUpPiece(col: Int, row: Int, pieces: Array<Piece>) -> Piece? {

@@ -54,6 +54,7 @@ class BoardView: UIView {
         startPos = (touchedCol, touchedRow);
         
         if let piece = lookedUpPiece {
+            
             if (piece.isWhite == isWhitesMove) {
                 
                 // highlight touched square
@@ -64,24 +65,30 @@ class BoardView: UIView {
                 self.layer.addSublayer(highlightedSquare);
                 
                 // highlight possible moves if piece selected
+                let tempPieces = pieces;
                 if (piece.value == .knight) {
-                    let moves = findLegalKnightMoves(fromCol: touchedCol, fromRow: touchedRow, isWhitesMove: isWhitesMove, pieces: pieces);
+                    var moves = findLegalKnightMoves(fromCol: touchedCol, fromRow: touchedRow, isWhitesMove: isWhitesMove, pieces: tempPieces);
+                    moves = filterIllegalMoves(moves: moves, fromCol: touchedCol, fromRow: touchedRow, isWhitesMove: isWhitesMove, pieces: tempPieces);
                     highlightPossibleMoves(moves: moves);
                 } else if (piece.value == .bishop) {
-                    let moves = findLegalBishopMoves(fromCol: touchedCol, fromRow: touchedRow, isWhitesMove: isWhitesMove, pieces: pieces);
+                    var moves = findLegalBishopMoves(fromCol: touchedCol, fromRow: touchedRow, isWhitesMove: isWhitesMove, pieces: tempPieces);
+                    moves = filterIllegalMoves(moves: moves, fromCol: touchedCol, fromRow: touchedRow, isWhitesMove: isWhitesMove, pieces: tempPieces);
                     highlightPossibleMoves(moves: moves);
-                    
                 } else if (piece.value == .rook) {
-                    let moves = findLegalRookMoves(fromCol: touchedCol, fromRow: touchedRow, isWhitesMove: isWhitesMove, pieces: pieces);
+                    var moves = findLegalRookMoves(fromCol: touchedCol, fromRow: touchedRow, isWhitesMove: isWhitesMove, pieces: tempPieces);
+                    moves = filterIllegalMoves(moves: moves, fromCol: touchedCol, fromRow: touchedRow, isWhitesMove: isWhitesMove, pieces: tempPieces);
                     highlightPossibleMoves(moves: moves);
                 } else if (piece.value == .queen) {
-                    let moves = findLegalQueenMoves(fromCol: touchedCol, fromRow: touchedRow, isWhitesMove: isWhitesMove, pieces: pieces);
+                    var moves = findLegalQueenMoves(fromCol: touchedCol, fromRow: touchedRow, isWhitesMove: isWhitesMove, pieces: tempPieces);
+                    moves = filterIllegalMoves(moves: moves, fromCol: touchedCol, fromRow: touchedRow, isWhitesMove: isWhitesMove, pieces: tempPieces);
                     highlightPossibleMoves(moves: moves);
                 } else if (piece.value == .king) {
-                    let moves = findLegalKingMoves(fromCol: touchedCol, fromRow: touchedRow, isWhitesMove: isWhitesMove, pieces: pieces);
+                    var moves = findLegalKingMoves(fromCol: touchedCol, fromRow: touchedRow, isWhitesMove: isWhitesMove, pieces: tempPieces);
+                    moves = filterIllegalMoves(moves: moves, fromCol: touchedCol, fromRow: touchedRow, isWhitesMove: isWhitesMove, pieces: tempPieces);
                     highlightPossibleMoves(moves: moves);
                 } else if (piece.value == .pawn) {
-                    let moves = findLegalPawnMoves(fromCol: touchedCol, fromRow: touchedRow, isWhitesMove: isWhitesMove, pieces: pieces);
+                    var moves = findLegalPawnMoves(fromCol: touchedCol, fromRow: touchedRow, isWhitesMove: isWhitesMove, pieces: tempPieces);
+                    moves = filterIllegalMoves(moves: moves, fromCol: touchedCol, fromRow: touchedRow, isWhitesMove: isWhitesMove, pieces: tempPieces);
                     highlightPossibleMoves(moves: moves);
                 }
             }
@@ -91,7 +98,15 @@ class BoardView: UIView {
             moves.append(startPos);
         } else if (moves.count > 0) {
             if (startPos != moves[0]) {
-                moves.append(startPos);
+                if let piece = lookUpPiece(col: moves[0].0, row: moves[0].1, pieces: pieces) {
+                    if let nextPiece = lookUpPiece(col: startPos.x, row: startPos.y, pieces: pieces) {
+                        if (piece.isWhite != nextPiece.isWhite) {
+                            moves.append(startPos);
+                        }
+                    } else {
+                        moves.append(startPos);
+                    }
+                }
             } else {
                 moves.removeAll();
             }
@@ -115,13 +130,27 @@ class BoardView: UIView {
                     
                     piece.hasMoved = true;
                 }
-
                 isWhitesMove = !isWhitesMove;
                 print("move made - boardView")
             }
             moves.removeAll();
             highlightedSquare.removeFromSuperlayer();
         }
+    }
+    
+    func filterIllegalMoves(moves: Array<(Int, Int)>, fromCol: Int, fromRow: Int, isWhitesMove: Bool, pieces: Array<Piece>) -> Array<(Int, Int)> {
+        var possibleMoves: Array<(Int, Int)> = [];
+        if (isInCheck(isWhitesMove: !isWhitesMove, pieces: pieces)) {
+            for move in moves {
+                let tempPieces = pieces;
+                if (doesMoveGetOutOfCheck(fromCol: fromCol, fromRow: fromRow, isWhitesMove: isWhitesMove, move: move, pieces: tempPieces)) {
+                    possibleMoves.append(move);
+                }
+            }
+        } else {
+            possibleMoves = moves;
+        }
+        return possibleMoves;
     }
     
     func highlightPossibleMoves(moves: Array<(Int, Int)>) {
