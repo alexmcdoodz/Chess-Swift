@@ -352,17 +352,40 @@ func isLegalMove(startCol: Int, startRow: Int, toCol: Int, toRow: Int, isWhitesM
         }
     }
     
-    var tempPieces = pieces;
-    
+    let tempPieces = pieces;
+    if (doesMovePutYouInCheck(startCol: startCol, startRow: startRow, toCol: toCol, toRow: toRow, isWhitesMove: isWhitesMove, pieces: tempPieces)) {
+        return false;
+    }
     
     return true;
 }
 
 func doesMovePutYouInCheck(startCol: Int, startRow: Int, toCol: Int, toRow: Int, isWhitesMove: Bool, pieces: Array<Piece>) -> Bool {
-    if let piece = lookUpPiece(col: startCol, row: startRow, pieces: pieces) {
-        if let capturedPiece = 
+    var tempPieces = pieces;
+    if let piece = lookUpPiece(col: startCol, row: startRow, pieces: tempPieces) {
+        if let capturePiece = lookUpPiece(col: toCol, row: toRow, pieces: tempPieces) {
+            let index = tempPieces.firstIndex{$0 === capturePiece};
+            tempPieces.remove(at: index!);
+            piece.col = toCol;
+            piece.row = toRow;
+            if (isInCheck(isWhitesMove: !isWhitesMove, pieces: tempPieces)) {
+                piece.col = startCol;
+                piece.row = startRow;
+                return true;
+            }
+        } else {
+            piece.col = toCol;
+            piece.row = toRow;
+            if (isInCheck(isWhitesMove: !isWhitesMove, pieces: tempPieces)) {
+                piece.col = startCol;
+                piece.row = startRow;
+                return true;
+            }
+        }
+        piece.col = startCol;
+        piece.row = startRow;
     }
-    return true ;
+    return false;
 }
 
 func lookUpPiece(col: Int, row: Int, pieces: Array<Piece>) -> Piece? {
