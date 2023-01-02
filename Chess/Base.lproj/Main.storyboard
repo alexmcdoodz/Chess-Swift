@@ -23,17 +23,37 @@
                                     <constraint firstAttribute="width" secondItem="L0Z-EW-7ez" secondAttribute="height" multiplier="1:1" id="lLs-ws-4Sa"/>
                                 </constraints>
                             </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SY3-h1-WKV">
+                                <rect key="frame" x="20" y="906" width="728" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PLa-IU-6ch">
+                                <rect key="frame" x="365" y="935" width="39" height="30"/>
+                                <state key="normal" title="Reset"/>
+                                <connections>
+                                    <action selector="resetGame:" destination="BYZ-38-t0r" eventType="touchUpInside" id="UTo-we-Ca9"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="SY3-h1-WKV" firstAttribute="top" secondItem="L0Z-EW-7ez" secondAttribute="bottom" constant="30" id="DVD-t4-psL"/>
+                            <constraint firstItem="SY3-h1-WKV" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="Fph-7I-FGV"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="PLa-IU-6ch" secondAttribute="trailing" constant="364" id="IHI-KQ-VeU"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="L0Z-EW-7ez" secondAttribute="trailing" constant="20" id="W8x-5U-dFO"/>
                             <constraint firstItem="L0Z-EW-7ez" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="Y8C-2U-Pfa"/>
                             <constraint firstItem="L0Z-EW-7ez" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="148" id="ZFe-47-2D6"/>
+                            <constraint firstItem="PLa-IU-6ch" firstAttribute="top" secondItem="SY3-h1-WKV" secondAttribute="bottom" constant="8" symbolic="YES" id="eqE-f8-AWQ"/>
+                            <constraint firstItem="PLa-IU-6ch" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="365" id="j5Y-0l-166"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="SY3-h1-WKV" secondAttribute="trailing" constant="20" id="jQ9-Qe-Q36"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="boardView" destination="L0Z-EW-7ez" id="Jiv-vY-pV6"/>
+                        <outlet property="winnersText" destination="SY3-h1-WKV" id="9LA-2d-TFn"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

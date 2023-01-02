@@ -71,6 +71,7 @@ class GameEngine {
     }
     
     func initPiecesFromFen(Fen: String) {
+        pieces = [];
         var row: Int = 0;
         var col: Int = 0;
         

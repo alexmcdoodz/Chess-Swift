@@ -29,13 +29,24 @@ class ViewController: UIViewController, MoveDelegate {
     
     var gameEngine: GameEngine = GameEngine();
     
+    @IBOutlet weak var winnersText: UILabel!
     @IBOutlet weak var boardView: BoardView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        winnersText.text = "";
         gameEngine.initGame();
         boardView.moveDelegate = self;
+        boardView.pieces = gameEngine.pieces;
+        boardView.setNeedsDisplay();
+    }
+    
+    @IBAction func resetGame(_ sender: Any) {
+        winnersText.text = "";
+        gameEngine.initGame();
+        gameEngine.isWhitesMove = true;
+        boardView.isWhitesMove = true;
         boardView.pieces = gameEngine.pieces;
         boardView.setNeedsDisplay();
     }

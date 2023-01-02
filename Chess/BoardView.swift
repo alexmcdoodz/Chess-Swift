@@ -15,12 +15,12 @@ extension Character {
 }
 
 class BoardView: UIView {
-    // probably make these private
+
     let x: CGFloat = 0;
     let y: CGFloat = 0;
     var pieces: Array<Piece> = [];
     var boardSqaures: Array<Array<(UIBezierPath, UIColor)>> = [];
-    var moveDelegate: MoveDelegate?;
+    var moveDelegate: ViewController?;
     var startPos: (x: Int, y: Int) = (0,0);
     var moves: Array<(Int, Int)> = [];
     var highlightedSquare = CAShapeLayer();
@@ -130,16 +130,22 @@ class BoardView: UIView {
                     
                     piece.hasMoved = true;
                 }
+                
                 isWhitesMove = !isWhitesMove;
                 print("move made - boardView")
+                
                 // find all possible moves for player
                 // if there are no possible moves and player in check it is check mate
                 let allPossibleMoves = findAllPossibleMoves(isWhitesMove: isWhitesMove, pieces: pieces);
                 if (allPossibleMoves.count == 0) {
                     if (isInCheck(isWhitesMove: !isWhitesMove, pieces: pieces)) {
-                        print("CHECK MATE!")
+                        if (isWhitesMove) {
+                            moveDelegate?.winnersText.text = "Check mate! Black wins.";
+                        } else {
+                            moveDelegate?.winnersText.text = "Check mate! White wins.";
+                        }
                     } else {
-                        print("STALEMATE!")
+                        moveDelegate?.winnersText.text = "Stalemate, the game is a draw.";
                     }
                 }
             }
