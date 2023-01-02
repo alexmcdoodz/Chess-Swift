@@ -21,7 +21,6 @@ class ViewController: UIViewController, MoveDelegate {
         boardView.setNeedsDisplay();
     }
     
-    
     func movePiece(startCol: Int, startRow: Int, toCol: Int, toRow: Int) {
         gameEngine.movePiece(startCol: startCol, startRow: startRow, toCol: toCol, toRow: toRow);
         boardView.pieces = gameEngine.pieces;

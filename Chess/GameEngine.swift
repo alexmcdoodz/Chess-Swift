@@ -9,6 +9,7 @@ import Foundation
 
 class GameEngine {
     let startPosition: String = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+//    let startPosition: String = "4k3/4P3/8/4K3/8/8/8/8 w - - 0 1"
     var isWhitesMove: Bool = true;
     var pieces: Array<Piece> = [];
     
@@ -52,6 +53,17 @@ class GameEngine {
                 }
                 startPiece.col = toCol;
                 startPiece.row = toRow;
+                if (startPiece.value == .pawn) {
+                    // Pawn promotion logic
+                    if (startPiece.row == 0 || startPiece.row == 7) {
+                        // remove piece and add a queen with same stuff as pawn
+                        let index = pieces.firstIndex{$0 === startPiece};
+                        pieces.remove(at: index!);
+                        
+                        let queen = Piece(col: startPiece.col, row: startPiece.row, imageName: startPiece.isWhite ? "white_queen" : "black_queen", isWhite: startPiece.isWhite, value: .queen)
+                        pieces.append(queen);
+                    }
+                }
             }
             // Flip who's move it is after each move
             isWhitesMove = !isWhitesMove;

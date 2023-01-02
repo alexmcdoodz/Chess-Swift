@@ -132,33 +132,20 @@ class BoardView: UIView {
                 }
                 isWhitesMove = !isWhitesMove;
                 print("move made - boardView")
+                // find all possible moves for player
+                // if there are no possible moves and player in check it is check mate
+                let allPossibleMoves = findAllPossibleMoves(isWhitesMove: isWhitesMove, pieces: pieces);
+                if (allPossibleMoves.count == 0) {
+                    if (isInCheck(isWhitesMove: !isWhitesMove, pieces: pieces)) {
+                        print("CHECK MATE!")
+                    } else {
+                        print("STALEMATE!")
+                    }
+                }
             }
             moves.removeAll();
             highlightedSquare.removeFromSuperlayer();
         }
-    }
-    
-    func filterIllegalMoves(moves: Array<(Int, Int)>, fromCol: Int, fromRow: Int, isWhitesMove: Bool, pieces: Array<Piece>) -> Array<(Int, Int)> {
-        var possibleMoves: Array<(Int, Int)> = [];
-        var legalMoves: Array<(Int, Int)> = [];
-        if (isInCheck(isWhitesMove: !isWhitesMove, pieces: pieces)) {
-            for move in moves {
-                let tempPieces = pieces;
-                if (doesMoveGetOutOfCheck(fromCol: fromCol, fromRow: fromRow, isWhitesMove: isWhitesMove, move: move, pieces: tempPieces)) {
-                    possibleMoves.append(move);
-                }
-            }
-        } else {
-            possibleMoves = moves;
-        }
-        
-        for move in possibleMoves {
-            let tempPieces = pieces;
-            if (!doesMovePutYouInCheck(startCol: fromCol, startRow: fromRow, toCol: move.0, toRow: move.1, isWhitesMove: isWhitesMove, pieces: tempPieces)) {
-                legalMoves.append(move);
-            }
-        }
-        return legalMoves;
     }
     
     func highlightPossibleMoves(moves: Array<(Int, Int)>) {

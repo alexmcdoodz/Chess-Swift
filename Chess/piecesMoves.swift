@@ -154,12 +154,13 @@ func findLegalPawnMoves(fromCol: Int, fromRow: Int, isWhitesMove: Bool, pieces: 
         if (piece.isWhite) {
             if (lookUpPiece(col: fromCol, row: fromRow - 1, pieces: pieces) == nil) {
                 possibleMoves.append((fromCol, fromRow - 1));
-            }
-            if (piece.row == 6) {
-                if (lookUpPiece(col: fromCol, row: fromRow - 2, pieces: pieces) == nil) {
-                    possibleMoves.append((fromCol, fromRow - 2));
+                if (piece.row == 6) {
+                    if (lookUpPiece(col: fromCol, row: fromRow - 2, pieces: pieces) == nil) {
+                        possibleMoves.append((fromCol, fromRow - 2));
+                    }
                 }
             }
+
             if let leftPiece = lookUpPiece(col: fromCol - 1, row: fromRow - 1, pieces: pieces) {
                 if (!leftPiece.isWhite) {
                     possibleMoves.append((fromCol - 1, fromRow - 1));
@@ -174,12 +175,13 @@ func findLegalPawnMoves(fromCol: Int, fromRow: Int, isWhitesMove: Bool, pieces: 
         } else {
             if (lookUpPiece(col: fromCol, row: fromRow + 1, pieces: pieces) == nil) {
                 possibleMoves.append((fromCol, fromRow + 1));
-            }
-            if (piece.row == 1) {
-                if (lookUpPiece(col: fromCol, row: fromRow + 2, pieces: pieces) == nil) {
-                    possibleMoves.append((fromCol, fromRow + 2));
+                if (piece.row == 1) {
+                    if (lookUpPiece(col: fromCol, row: fromRow + 2, pieces: pieces) == nil) {
+                        possibleMoves.append((fromCol, fromRow + 2));
+                    }
                 }
             }
+
             if let leftPiece = lookUpPiece(col: fromCol - 1, row: fromRow + 1, pieces: pieces) {
                 if (leftPiece.isWhite) {
                     possibleMoves.append((fromCol - 1, fromRow + 1));
