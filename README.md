@@ -1,4 +1,4 @@
-# Running Program.
+# Running the Program
 
 To run this program open within Xcode and ensure that you are using an IOS device simulator. Although it will compile and run for Mac OS devices, the view is not configured for that OS. Once your device is selected, run the program using the play button top left or with the shortcut cmd + R. Enjoy.
 
