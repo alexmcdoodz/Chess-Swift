@@ -184,4 +184,6 @@ Finally one of the major features I missed out is other ways to draw the game. S
 
 Finally games can be drawn through repitition. This is a rather common tactic in chess, especially if you are in a losing position. If you are in a losing position you can sometimes force a draw through a forced line of repitition, after 3 moves of repitition the game is drawn. To solve this I would need to store every move made during the game in some kind of data structure, probably an array. Again in the checkIfGameOver function we look at the last three moves made and if they are repeating we know the game is drawn. 
 
+# Video Demo 
 
+https://youtu.be/ZaPOgWVHJi8
