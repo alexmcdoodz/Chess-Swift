@@ -122,4 +122,11 @@ The next epic to undertake was castling. Castling involves two moves to get the 
 rook then lands next to the king. It was not possible do this using my previous move function, due to that function flipping who’s turn it is after each 
 move and I need to make two moves in a row for the same player. To do this I created two separate functions, one to handle castling long and the other 
 for castling short. They both check whether the squares in-between king and rook are free of pieces. I also had to add a new variable to the piece class
-called hasMoved, a boolean. This was nessecary as you can only castle if neither rook or king have moved. 
+called hasMoved, a boolean. This was nessecary as you can only castle if neither rook or king have moved. If both or these conditions are met then we update the cordinates of the rook and king. 
+
+With all the piece movement inplace the next major epic to tackle was the idea of check. A vital element of the game. To do this I created a function which finds all squares which are under attack from one players set of pieces. This is done by finding all the possible squares all the pieces can move to then we loop through all of these squares and see whether the players king is on any of them, if it is then the king must be in check. Upon a later review I move the logic to find all attacked squares to a seperate function. 
+
+
+Next was to make sure that being in check restricted the players move. When in check the player must make a move to get out of check. To solve this problem I created the below function. This function takes a move and psuedo plays it. It then checks whether the player is still in check using the previous function and returns a boolean as to whether the move is effective and getting the player out of check or not. Within the earlier makeMove function we check if the player is in check, if they are we then check if their proposed move gets them out of check. If it does, it is a legal move and is playable. 
+
+<img width="1013" alt="Screenshot 2023-01-04 at 09 40 34" src="https://user-images.githubusercontent.com/92785231/210526598-fe626302-d2e4-4308-ab08-2cfef3ed6ff7.png">
