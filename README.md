@@ -1,3 +1,7 @@
+# Running Program.
+
+To run this program open within Xcode and ensure that you are using an IOS device simulator. Although it will compile and run for Mac OS devices, the view is not configured for that OS. Once your device is selected, run the program using the play button top left or with the shortcut cmd + R. Enjoy.
+
 # Challenge Outline
 
 For this assignment I chose to create a two player chess game which enforces all legal moves. I decided upon making the game for IOS devices using the 
@@ -38,7 +42,9 @@ the full 64 square using a nested for loop.
 
 Once the code was in place and was manually tested to be working, I reflected upon how I had implemented the board rendering. I ended up splitting the 
 board rendering into two separate functions, one to create the two dimensional array and another which actually does the rendering to the screen. Although 
-this could have been done in a single function I think it makes sense to separate these actions and results in easier to follow code. 
+this could have been done in a single function I think it makes sense to separate these actions and results in easier to follow code. This can be seen below. 
+
+<img width="1098" alt="Screenshot 2023-01-04 at 11 12 47" src="https://user-images.githubusercontent.com/92785231/210543192-68fefc11-6f75-4d56-a7e0-18fd297e075b.png">
 
 The next step was to render pieces to the screen. To start I created a basic piece class. The class contains information such as the column and row the 
 piece is located at, the value of the piece, the colour of the piece and the image to represent the piece. Within the boardView class there is an array 
@@ -57,14 +63,9 @@ array of pieces. Using a for loop the function loops through the array, if a pie
 If the user has clicked on a piece, I store those coordinates within an array. The next time a touch is made those coordinates are also stored, there is 
 now enough information for a move to be made. A starting location a desired destination. 
 
-The next task was to make use of the captured coordinates to physically move the pieces. I decided that this logic should not be part of the view class but
-instead the model class, which should handle the game logic. The model also contains an array of pieces, for it to perform the game logic upon. I created 
-a function, ingeniously named movePiece, which takes in four integers; a start column and row and a desired column and row the user wants to relocate a 
-piece to. I simply find the piece located at the start coordinates and update their coordinates to the desired destination. The controller then updates 
-the view’s pieces array to the models array and sets the screen to be re-rendered and the pieces now move! 
+The next task was to make use of the captured coordinates to physically move the pieces. I decided that this logic should not be part of the view class but instead the model class, which should handle the game logic. The model also contains an array of pieces, for it to perform the game logic upon. I created a function, ingeniously named movePiece, which takes in four integers; a start column and row and a desired column and row the user wants to relocate a piece to. I simply find the piece located at the start coordinates and update their coordinates to the desired destination. The controller then updates the view’s pieces array to the models array and sets the screen to be re-rendered and the pieces now move! 
 
-An issue now arises though, when a user moves a piece to a square which already contains a piece. One piece was rendered above an another leading to a host
-of bugs and problems. In real life this isn’t an issue, the player simply removes the piece from the board and replaces it with their piece. The same 
+An issue now arises though, when a user moves a piece to a square which already contains a piece. One piece was rendered above an another leading to a host of bugs and problems. In real life this isn’t an issue, the player simply removes the piece from the board and replaces it with their piece. The same 
 logic applies within my program too. If the target square contains a piece, I remove it from the pieces array, update the starting piece’s coordinates and 
 the controller sets the view to be updated and now piece capturing is implemented. To prevent a user from capturing their own pieces, I only remove pieces 
 of the opposite colour to the piece being moved. This is done by checking the isWhite boolean in both pieces, if they are not equal a capture is made. 
@@ -86,6 +87,9 @@ is represented as a tuple of an X and Y coordinate. As it possible I added a mov
 check each move is within the bounds of the 64 squares. I also check whether the target square contains a piece of the same colour, this of course would 
 not be a legal square to move to. The array of possible squares the knight can move to is then returned. 
 
+<img width="1082" alt="Screenshot 2023-01-04 at 11 14 21" src="https://user-images.githubusercontent.com/92785231/210543462-664f93bc-455f-42b7-b72e-0ff5a5c83183.png">
+
+
 Within the isLegalMove function I look up the piece on the starting square and check it’s value. If it is a knight I call the findLegalKnightMoves 
 function and check whether the move the user wants to make is within the possible moves of the knight. If not we return false to indicate that it is not 
 a legal move and the move function will not make the move. 
@@ -98,17 +102,25 @@ out of the loop. I do this because bishops don’t posses X-ray powers, once the
 contain potential target squares which have a piece of the same colour on. To solve this issue I loop through the possible moves array and check each 
 square, if it contains a piece of the same colour it is filtered out. 
 
+<img width="753" alt="Screenshot 2023-01-04 at 11 14 56" src="https://user-images.githubusercontent.com/92785231/210543532-08afc546-7d31-4a01-8c5c-4a46ab8e9b7d.png">
+
+
 The next piece to tackle was the rooks. They move orthogonally any number of squares that they like. I do this in much the same way that I did for the 
 bishops, with four separate loops. Though instead of looking diagonally I just look up, down, left and right this time. Again I check whether the 
 potential square contains a piece and if it does we break out of the loop. Again like the bishops, the possible move array might contain squares which 
 already have a piece of the same colour. These are filtered out by looping through the array and making the same check as with the bishops. 
 
+<img width="761" alt="Screenshot 2023-01-04 at 11 15 21" src="https://user-images.githubusercontent.com/92785231/210543603-cddc3332-dd91-4633-b490-9bfeee750519.png">
+
+
 With the bishop and rook movement logic in place finding the legal moves for the queen is easy. The queen can move both diagonally like bishops and 
 orthogonally like a rook. I create a separate function to find the queen’s moves and simply call both the bishop function and the rook functions and add 
 the results to a single array which is then returned. 
 
-The king, much like the knight, has only 8 possible moves max at any one time. It can only move one square at a time in any direction. So I decided to hard
-code these possible moves into an array, the same as I did with the knight. Then I loop through the array and check whether any of the moves extend 
+<img width="916" alt="Screenshot 2023-01-04 at 11 15 40" src="https://user-images.githubusercontent.com/92785231/210543650-982f5652-d121-4481-84d9-6b1a64a55cc5.png">
+
+
+The king, much like the knight, has only 8 possible moves max at any one time. It can only move one square at a time in any direction. So I decided to hard code these possible moves into an array, the same as I did with the knight. Then I loop through the array and check whether any of the moves extend 
 outside of the bounds of the board or if square contains a piece of the same colour, these are then filtered out of the final result much like I have done 
 before. 
 
@@ -119,11 +131,17 @@ possible move array. If the pawn is on the starting square I then check whether 
 the possible moves. Next I must check the squares diagonally in front of the pawn, if either of them contain a piece of the opposite colour the square is 
 also added to the possible moves. Finally I loop through the possible moves and check that each move is within the bounds of the board. 
 
+<img width="686" alt="Screenshot 2023-01-04 at 11 16 22" src="https://user-images.githubusercontent.com/92785231/210543740-5c3fd097-44b9-4f4f-a0d0-a2e76ae2beac.png">
+
+
 The next epic to undertake was castling. Castling involves two moves to get the king to safety. The king moves two squares either left of right and the 
 rook then lands next to the king. It was not possible do this using my previous move function, due to that function flipping who’s turn it is after each 
 move and I need to make two moves in a row for the same player. To do this I created two separate functions, one to handle castling long and the other 
 for castling short. They both check whether the squares in-between king and rook are free of pieces. I also had to add a new variable to the piece class
 called hasMoved, a boolean. This was nessecary as you can only castle if neither rook or king have moved. If both or these conditions are met then we update the cordinates of the rook and king. 
+
+<img width="583" alt="Screenshot 2023-01-04 at 11 17 16" src="https://user-images.githubusercontent.com/92785231/210543893-9029a4fe-d960-4143-8645-64427952391d.png">
+
 
 With all the piece movement inplace the next major epic to tackle was the idea of check. A vital element of the game. To do this I created a function which finds all squares which are under attack from one players set of pieces. This is done by finding all the possible squares all the pieces can move to then we loop through all of these squares and see whether the players king is on any of them, if it is then the king must be in check. Upon a later review I move the logic to find all attacked squares to a seperate function. 
 
@@ -158,7 +176,7 @@ The code I am most proud of isn't a single function but a few around how I handl
 
 <img width="1054" alt="Screenshot 2023-01-04 at 10 41 15" src="https://user-images.githubusercontent.com/92785231/210537763-39602189-bd85-4cb7-b644-c7ffd943a5a5.png">
 
-Overall I am proud of what I was able to achieve. But there are some issues that if given more time I would like to address. To begin with there are many areas of code which need refactoring. Many functions are too long and there is a heavy level of intendation throughout the code base. Part of this is also due to how Swift handles optionals and maybe down to my inexperience with the language. 
+Overall I am proud of what I was able to achieve. But there are some issues that if given more time I would like to address. To begin with there are many areas of code which need refactoring. Many functions are too long and there is a heavy level of intendation throughout the code base. Part of this is also due to how Swift handles optionals and maybe down to my inexperience with the language. The organisation of my project also needs significant work. There are many freestanding functions, which are seperated into their own logical files. This occoured due to the breakdown of the model view controller. Ideally most of these functions should be contained within the gameEngine class, as they are core game logic. This would take significant refactoring though of both the files and the model view controller architecture. 
 
 There are also some features that I have not added such as en passant. This could be achieved by storing the square behind a pawn after it moves forward two squares in a seperate variable. On the next turn I could then check if a pawn is attacking the en passant square, if it is then I could add it to the array of possible moves for the pawn. Another feature I missed out regarding pawns is promotion to any piece. It is most common in chess to promote a pawn to the queen, usually leading to victory. Though in some rare cases a player may choose to under promote to a knight or bishop for example. 
 
