@@ -1,25 +1,26 @@
-Chess Read me
-
-
-Challenge Outline
+# Challenge Outline
 
 For this assignment I chose to create a two player chess game which enforces all legal moves. I decided upon making the game for IOS devices using the 
 language Swift. I have some limited experience in Swift already but the real reason I choose to go with Swift and IOS devices is to harness the already 
 provided UI and user interaction tools built into Swift.
 
-I decided upon a model view controller design approach. See diagram. 
+I decided upon a model view controller design approach. See diagram. Although simple in premise, the challenge came about due to the amount of complicated logic that was needed within enforcing legal moves and the interaction between these three components.
+
+<img width="842" alt="Screenshot 2023-01-04 at 11 09 29" src="https://user-images.githubusercontent.com/92785231/210542667-2e6d4bd6-e731-498e-bc80-033360ebd14f.png">
 
 
 To start my approach to the project I broke the project into logical smaller tasks / epics, such as “detecting finger touches” or “capturing piece logic”. 
 I then made a kanban board to track my progress and visualise outstanding work. 
 
-Insert diagram here. 
+<img width="981" alt="Screenshot 2023-01-04 at 09 44 00" src="https://user-images.githubusercontent.com/92785231/210527212-7651d162-b532-445a-be41-308489c04c2c.png">
 
 Before starting the development phase of my project I thought about the architecture I was going to use in the program, with the plan to avoid a mass of 
 unstructured spaghetti code. I went forward with a model-view-controller, a common architecture for games. This architecture helps us split the UI 
 rendering and game logic up which can lead to an easier development process due to clear separation of different parts of the code. 
 
-2. Development
+# Development
+
+Thoughout the development stage I stuck to a few coding conventions, such as naming conventions, spacing, well named and organised files, indents, camel case and also rigorous manual testing after each milestone. I initially wanted to have a series of unit tests testing all functionality but due to time constraints I was unable to achieve this. Instead I made sure to test my code to failiure, trying to find break points to imrpove the quality of my code. I did this through using complicated chess positions, which I knew may cause trouble with my code. 
 
 To begin development I created the main classes for the project. These were the boardView class, gameEngine class and the piece class. Within Swift 
 development it is common to have class called viewController, these are used to control various aspects of the view and therefore makes a natural 
@@ -130,3 +131,39 @@ With all the piece movement inplace the next major epic to tackle was the idea o
 Next was to make sure that being in check restricted the players move. When in check the player must make a move to get out of check. To solve this problem I created the below function. This function takes a move and psuedo plays it. It then checks whether the player is still in check using the previous function and returns a boolean as to whether the move is effective and getting the player out of check or not. Within the earlier makeMove function we check if the player is in check, if they are we then check if their proposed move gets them out of check. If it does, it is a legal move and is playable. 
 
 <img width="1013" alt="Screenshot 2023-01-04 at 09 40 34" src="https://user-images.githubusercontent.com/92785231/210526598-fe626302-d2e4-4308-ab08-2cfef3ed6ff7.png">
+
+Another aspect of chess is that it is illegal to make a move which puts you in check. I solved this in much the same way as the previous challenge. Before a move is made, I psuedo make that move in a seperate function and check whether the move will have put the player into check. If it does put the player into check, it is an illegal move and therefore cannot be played. 
+
+Through some extensive manual testing and by looking at positions I knew may cause trouble I had found I had some problems with my castling logic. In chess the king may not castle when in check and it also may not pass through check. Meaning that if an enemy piece is attacking one of the squares between the king and the rook, castling is not legal. To solve this I used the previous function which finds all attacked squares and check whether the squares between the rook and king are under attack. If they are, then castling is not permitted. 
+
+Finally the last major epic was making sure the game could be won or drawn via stalemate. This was quite easy though through code I had written previously. At the end of each move we can make a check whether the opponent is in check, if they are we calculate all of their possible legal moves. If they have zero legal moves and are in check, then game over checkmate has been achieved. Otherwise if the opponent is not in check but has no possible moves either, then stalemate has been reached and the game is drawn. 
+
+# Evaluation
+
+Although I am incredibly proud of what I have achieved, my code does have some significant smells. I have several functions which need serious refactoring. They are extremely long and contain confusing and heavily indented code. An example of this can be found below. This function is so long infact it is impossible for me to capture it all in one screenshot. It can most definitely be described as a God function. This function needs some heavy refactoring. The function handles too many different aspects of the game, such as registering the moves the player wants to make and highlighting squares. Ideally we want a function to have a single purpose. This makes our code more readable but perhaps more importantly it makes our code more maintainable. 
+
+<img width="790" alt="Screenshot 2023-01-04 at 09 59 34" src="https://user-images.githubusercontent.com/92785231/210530235-f6f1470b-4bcf-4199-b69e-7c1ee9a20df0.png">
+
+Another major smell my code exudes is the fact that as the project went on the seperation between model and view became blurred. This was really due to time contraints and an eagerness to have a working project finished. An example can be seen below. This is within the view component. We can see that the view is doing checks such as whether a move and if the game is over or not. This is logic that should be handled by the view component, who's sole purpose is to display data. This logic should be handled by the model, which in turn should pass that data back to the view for rendering. Having this blurred line between the different components can cause complications if bugs arise. 
+
+<img width="1262" alt="Screenshot 2023-01-04 at 10 19 50" src="https://user-images.githubusercontent.com/92785231/210534006-d68d7fd2-60de-4b30-9e82-a7e4d06296e3.png">
+
+One advanced programming technique I used was inheritance and protocols, which are a native feature in Swift. This can be seen below. We can see that my view controller inherits from two classes, UIViewController and MoveDelegate. The former is done automatically by Swift. The MoveDelegate is a protocol that I created. A protocol can be thought of as a strict blueprint for any class which inherits from it. The child class must comply to the protocol, or in other words the protocol delegates to the child class certain attributes. Although not strictly nessercary, it is a good way to define how a class should work before working on the implementation and harnessing Swift to ensure our classes are correct. 
+
+<img width="707" alt="Screenshot 2023-01-04 at 10 25 08" src="https://user-images.githubusercontent.com/92785231/210535479-bc235e53-3a6d-48be-b005-213942c53de5.png">
+
+<img width="518" alt="Screenshot 2023-01-04 at 10 29 35" src="https://user-images.githubusercontent.com/92785231/210535696-de3b8925-6cc5-4f45-b575-249fa1eb6889.png">
+
+The code I am most proud of isn't a single function but a few around how I handle the idea of check. The below function is used across my program, it removes any illegal moves from an array of potential moves. This is a crucial piece of code and prevents the user from making a move which either puts them into check, or when in check it prevents them from making a non relevant move. It is also used within the view component when highlighting potential viable squares to move a piece to, I did not want to highlight squares which would be deemed illegal. 
+
+<img width="1054" alt="Screenshot 2023-01-04 at 10 41 15" src="https://user-images.githubusercontent.com/92785231/210537763-39602189-bd85-4cb7-b644-c7ffd943a5a5.png">
+
+Overall I am proud of what I was able to achieve. But there are some issues that if given more time I would like to address. To begin with there are many areas of code which need refactoring. Many functions are too long and there is a heavy level of intendation throughout the code base. Part of this is also due to how Swift handles optionals and maybe down to my inexperience with the language. 
+
+There are also some features that I have not added such as en passant. This could be achieved by storing the square behind a pawn after it moves forward two squares in a seperate variable. On the next turn I could then check if a pawn is attacking the en passant square, if it is then I could add it to the array of possible moves for the pawn. Another feature I missed out regarding pawns is promotion to any piece. It is most common in chess to promote a pawn to the queen, usually leading to victory. Though in some rare cases a player may choose to under promote to a knight or bishop for example. 
+
+Finally one of the major features I missed out is other ways to draw the game. Stalemate is the only way for a game to end in a draw. Draws also occour when both players have insuffecient pieces to deliver checkmate. For example if both players only have a king remaining, the game is drawn. Though there are other positions and examples. This could be solved in the checkIfGameOver function. In the function we can check the array which holds the all current pieces. If for example there is only two kings remaining, we know the game is a draw. Or another example if a player only has a king and a knight and the other player only has a king, we also know the game is a draw. 
+
+Finally games can be drawn through repitition. This is a rather common tactic in chess, especially if you are in a losing position. If you are in a losing position you can sometimes force a draw through a forced line of repitition, after 3 moves of repitition the game is drawn. To solve this I would need to store every move made during the game in some kind of data structure, probably an array. Again in the checkIfGameOver function we look at the last three moves made and if they are repeating we know the game is drawn. 
+
+
